@@ -1,0 +1,296 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="InventoryDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="category_id" />
+    </Key>
+    <Property Name="category_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="company_name" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="CategoryItem">
+    <Key>
+      <PropertyRef Name="category_id" />
+      <PropertyRef Name="item_id" />
+    </Key>
+    <Property Name="category_id" Type="int" Nullable="false" />
+    <Property Name="item_id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Company">
+    <Key>
+      <PropertyRef Name="company_id" />
+    </Key>
+    <Property Name="company_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="company_name" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Event">
+    <Key>
+      <PropertyRef Name="event_id" />
+    </Key>
+    <Property Name="event_id" Type="int" Nullable="false" />
+    <Property Name="host_id" Type="int" />
+    <Property Name="event_name" Type="nvarchar" MaxLength="50" />
+    <Property Name="event_date" Type="datetime" />
+    <Property Name="date_created" Type="datetime" />
+    <Property Name="description" Type="text" />
+    <Property Name="location" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="EventMember">
+    <Key>
+      <PropertyRef Name="event_id" />
+      <PropertyRef Name="member_id" />
+    </Key>
+    <Property Name="event_id" Type="int" Nullable="false" />
+    <Property Name="member_id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Inventory">
+    <Key>
+      <PropertyRef Name="inventory_id" />
+    </Key>
+    <Property Name="inventory_id" Type="int" Nullable="false" />
+    <Property Name="item_id" Type="int" Nullable="false" />
+    <Property Name="date_added" Type="datetime" Nullable="false" />
+    <Property Name="condition" Type="decimal" Precision="1" Scale="0" Nullable="false" />
+    <Property Name="price" Type="money" />
+    <Property Name="company_id" Type="int" />
+    <Property Name="event_id" Type="int" />
+    <Property Name="member_id" Type="int" />
+    <Property Name="date_checked_out" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Item">
+    <Key>
+      <PropertyRef Name="item_id" />
+    </Key>
+    <Property Name="item_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="description" Type="text" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Member">
+    <Key>
+      <PropertyRef Name="member_id" />
+    </Key>
+    <Property Name="member_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="address" Type="nvarchar" MaxLength="50" />
+    <Property Name="email" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="MemberPhone">
+    <Key>
+      <PropertyRef Name="member_id" />
+      <PropertyRef Name="phone_id" />
+    </Key>
+    <Property Name="member_id" Type="int" Nullable="false" />
+    <Property Name="phone_id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Phone">
+    <Key>
+      <PropertyRef Name="phone_id" />
+    </Key>
+    <Property Name="phone_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="phone_number" Type="nchar" MaxLength="10" Nullable="false" />
+    <Property Name="phone_name" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="userID" />
+    </Key>
+    <Property Name="userID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="userName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="email" Type="nvarchar" MaxLength="50" />
+    <Property Name="phone" Type="numeric" Precision="15" Scale="0" />
+    <Property Name="userType" Type="numeric" Precision="5" Scale="0" Nullable="false" />
+    <Property Name="fName" Type="nvarchar" MaxLength="50" />
+    <Property Name="lName" Type="nvarchar" MaxLength="50" />
+    <Property Name="authToken" Type="nvarchar(max)" />
+    <Property Name="authDate" Type="datetime" />
+  </EntityType>
+  <Association Name="FK_CategoryItem_Category">
+    <End Role="Category" Type="Self.Category" Multiplicity="1" />
+    <End Role="CategoryItem" Type="Self.CategoryItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Category">
+        <PropertyRef Name="category_id" />
+      </Principal>
+      <Dependent Role="CategoryItem">
+        <PropertyRef Name="category_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CategoryItem_Item">
+    <End Role="Item" Type="Self.Item" Multiplicity="1" />
+    <End Role="CategoryItem" Type="Self.CategoryItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Item">
+        <PropertyRef Name="item_id" />
+      </Principal>
+      <Dependent Role="CategoryItem">
+        <PropertyRef Name="item_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Event_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="Event" Type="Self.Event" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="userID" />
+      </Principal>
+      <Dependent Role="Event">
+        <PropertyRef Name="host_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EventMember_Event">
+    <End Role="Event" Type="Self.Event" Multiplicity="1" />
+    <End Role="EventMember" Type="Self.EventMember" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Event">
+        <PropertyRef Name="event_id" />
+      </Principal>
+      <Dependent Role="EventMember">
+        <PropertyRef Name="event_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EventMember_Member">
+    <End Role="Member" Type="Self.Member" Multiplicity="1" />
+    <End Role="EventMember" Type="Self.EventMember" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Member">
+        <PropertyRef Name="member_id" />
+      </Principal>
+      <Dependent Role="EventMember">
+        <PropertyRef Name="member_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Inventory_Company">
+    <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+    <End Role="Inventory" Type="Self.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="company_id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="company_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Inventory_Event">
+    <End Role="Event" Type="Self.Event" Multiplicity="0..1" />
+    <End Role="Inventory" Type="Self.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Event">
+        <PropertyRef Name="event_id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="event_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Inventory_Item">
+    <End Role="Item" Type="Self.Item" Multiplicity="1" />
+    <End Role="Inventory" Type="Self.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Item">
+        <PropertyRef Name="item_id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="item_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Inventory_Member">
+    <End Role="Member" Type="Self.Member" Multiplicity="0..1" />
+    <End Role="Inventory" Type="Self.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Member">
+        <PropertyRef Name="member_id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="member_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MemberPhone_Member">
+    <End Role="Member" Type="Self.Member" Multiplicity="1" />
+    <End Role="MemberPhone" Type="Self.MemberPhone" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Member">
+        <PropertyRef Name="member_id" />
+      </Principal>
+      <Dependent Role="MemberPhone">
+        <PropertyRef Name="member_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MemberPhone_Phone">
+    <End Role="Phone" Type="Self.Phone" Multiplicity="1" />
+    <End Role="MemberPhone" Type="Self.MemberPhone" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Phone">
+        <PropertyRef Name="phone_id" />
+      </Principal>
+      <Dependent Role="MemberPhone">
+        <PropertyRef Name="phone_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="InventoryDatabaseModelStoreContainer">
+    <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CategoryItem" EntityType="Self.CategoryItem" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="EventMember" EntityType="Self.EventMember" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Inventory" EntityType="Self.Inventory" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Member" EntityType="Self.Member" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MemberPhone" EntityType="Self.MemberPhone" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Phone" EntityType="Self.Phone" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_CategoryItem_Category" Association="Self.FK_CategoryItem_Category">
+      <End Role="Category" EntitySet="Category" />
+      <End Role="CategoryItem" EntitySet="CategoryItem" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CategoryItem_Item" Association="Self.FK_CategoryItem_Item">
+      <End Role="Item" EntitySet="Item" />
+      <End Role="CategoryItem" EntitySet="CategoryItem" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Event_Users" Association="Self.FK_Event_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Event" EntitySet="Event" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EventMember_Event" Association="Self.FK_EventMember_Event">
+      <End Role="Event" EntitySet="Event" />
+      <End Role="EventMember" EntitySet="EventMember" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EventMember_Member" Association="Self.FK_EventMember_Member">
+      <End Role="Member" EntitySet="Member" />
+      <End Role="EventMember" EntitySet="EventMember" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Inventory_Company" Association="Self.FK_Inventory_Company">
+      <End Role="Company" EntitySet="Company" />
+      <End Role="Inventory" EntitySet="Inventory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Inventory_Event" Association="Self.FK_Inventory_Event">
+      <End Role="Event" EntitySet="Event" />
+      <End Role="Inventory" EntitySet="Inventory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Inventory_Item" Association="Self.FK_Inventory_Item">
+      <End Role="Item" EntitySet="Item" />
+      <End Role="Inventory" EntitySet="Inventory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Inventory_Member" Association="Self.FK_Inventory_Member">
+      <End Role="Member" EntitySet="Member" />
+      <End Role="Inventory" EntitySet="Inventory" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MemberPhone_Member" Association="Self.FK_MemberPhone_Member">
+      <End Role="Member" EntitySet="Member" />
+      <End Role="MemberPhone" EntitySet="MemberPhone" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MemberPhone_Phone" Association="Self.FK_MemberPhone_Phone">
+      <End Role="Phone" EntitySet="Phone" />
+      <End Role="MemberPhone" EntitySet="MemberPhone" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="InventoryDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="category_id" />
+    </Key>
+    <Property Name="category_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="company_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Items" Relationship="Self.CategoryItem" FromRole="Category" ToRole="Item" />
+  </EntityType>
+  <EntityType Name="Company">
+    <Key>
+      <PropertyRef Name="company_id" />
+    </Key>
+    <Property Name="company_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="company_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Inventories" Relationship="Self.FK_Inventory_Company" FromRole="Company" ToRole="Inventory" />
+  </EntityType>
+  <EntityType Name="Event">
+    <Key>
+      <PropertyRef Name="event_id" />
+    </Key>
+    <Property Name="event_id" Type="Int32" Nullable="false" />
+    <Property Name="host_id" Type="Int32" />
+    <Property Name="event_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="event_date" Type="DateTime" Precision="3" />
+    <Property Name="date_created" Type="DateTime" Precision="3" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="location" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="User" Relationship="Self.FK_Event_Users" FromRole="Event" ToRole="Users" />
+    <NavigationProperty Name="Inventories" Relationship="Self.FK_Inventory_Event" FromRole="Event" ToRole="Inventory" />
+    <NavigationProperty Name="Members" Relationship="Self.EventMember" FromRole="Event" ToRole="Member" />
+  </EntityType>
+  <EntityType Name="Inventory">
+    <Key>
+      <PropertyRef Name="inventory_id" />
+    </Key>
+    <Property Name="inventory_id" Type="Int32" Nullable="false" />
+    <Property Name="item_id" Type="Int32" Nullable="false" />
+    <Property Name="date_added" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="condition" Type="Decimal" Precision="1" Scale="0" Nullable="false" />
+    <Property Name="price" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="company_id" Type="Int32" />
+    <Property Name="event_id" Type="Int32" />
+    <Property Name="member_id" Type="Int32" />
+    <Property Name="date_checked_out" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Company" Relationship="Self.FK_Inventory_Company" FromRole="Inventory" ToRole="Company" />
+    <NavigationProperty Name="Event" Relationship="Self.FK_Inventory_Event" FromRole="Inventory" ToRole="Event" />
+    <NavigationProperty Name="Member" Relationship="Self.FK_Inventory_Member" FromRole="Inventory" ToRole="Member" />
+    <NavigationProperty Name="Item" Relationship="InventoryDatabaseModel.FK_Inventory_Item" FromRole="Inventory" ToRole="Item" />
+  </EntityType>
+  <EntityType Name="Item">
+    <Key>
+      <PropertyRef Name="item_id" />
+    </Key>
+    <Property Name="item_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Categories" Relationship="Self.CategoryItem" FromRole="Item" ToRole="Category" />
+    <NavigationProperty Name="Inventories" Relationship="InventoryDatabaseModel.FK_Inventory_Item" FromRole="Item" ToRole="Inventory" />
+  </EntityType>
+  <EntityType Name="Member">
+    <Key>
+      <PropertyRef Name="member_id" />
+    </Key>
+    <Property Name="member_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Inventories" Relationship="Self.FK_Inventory_Member" FromRole="Member" ToRole="Inventory" />
+    <NavigationProperty Name="Events" Relationship="Self.EventMember" FromRole="Member" ToRole="Event" />
+    <NavigationProperty Name="Phones" Relationship="Self.MemberPhone" FromRole="Member" ToRole="Phone" />
+  </EntityType>
+  <EntityType Name="Phone">
+    <Key>
+      <PropertyRef Name="phone_id" />
+    </Key>
+    <Property Name="phone_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="phone_number" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="phone_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Members" Relationship="Self.MemberPhone" FromRole="Phone" ToRole="Member" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="userID" />
+    </Key>
+    <Property Name="userID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="userName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="phone" Type="Decimal" Precision="15" Scale="0" />
+    <Property Name="userType" Type="Decimal" Precision="5" Scale="0" Nullable="false" />
+    <Property Name="fName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="lName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="authToken" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="authDate" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Events" Relationship="Self.FK_Event_Users" FromRole="Users" ToRole="Event" />
+  </EntityType>
+  <Association Name="FK_Inventory_Company">
+    <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+    <End Role="Inventory" Type="Self.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="company_id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="company_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Event_Users">
+    <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Event" Type="Self.Event" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="userID" />
+      </Principal>
+      <Dependent Role="Event">
+        <PropertyRef Name="host_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Inventory_Event">
+    <End Role="Event" Type="Self.Event" Multiplicity="0..1" />
+    <End Role="Inventory" Type="Self.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Event">
+        <PropertyRef Name="event_id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="event_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Inventory_Member">
+    <End Role="Member" Type="Self.Member" Multiplicity="0..1" />
+    <End Role="Inventory" Type="Self.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Member">
+        <PropertyRef Name="member_id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="member_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CategoryItem">
+    <End Role="Category" Type="Self.Category" Multiplicity="*" />
+    <End Role="Item" Type="Self.Item" Multiplicity="*" />
+  </Association>
+  <Association Name="EventMember">
+    <End Role="Event" Type="Self.Event" Multiplicity="*" />
+    <End Role="Member" Type="Self.Member" Multiplicity="*" />
+  </Association>
+  <Association Name="MemberPhone">
+    <End Role="Member" Type="Self.Member" Multiplicity="*" />
+    <End Role="Phone" Type="Self.Phone" Multiplicity="*" />
+  </Association>
+  <EntityContainer Name="InventoryDatabaseEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Categories" EntityType="Self.Category" />
+    <EntitySet Name="Companies" EntityType="Self.Company" />
+    <EntitySet Name="Events" EntityType="Self.Event" />
+    <EntitySet Name="Inventories" EntityType="Self.Inventory" />
+    <EntitySet Name="Items" EntityType="Self.Item" />
+    <EntitySet Name="Members" EntityType="Self.Member" />
+    <EntitySet Name="Phones" EntityType="Self.Phone" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK_Inventory_Company" Association="Self.FK_Inventory_Company">
+      <End Role="Company" EntitySet="Companies" />
+      <End Role="Inventory" EntitySet="Inventories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Event_Users" Association="Self.FK_Event_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Event" EntitySet="Events" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Inventory_Event" Association="Self.FK_Inventory_Event">
+      <End Role="Event" EntitySet="Events" />
+      <End Role="Inventory" EntitySet="Inventories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Inventory_Member" Association="Self.FK_Inventory_Member">
+      <End Role="Member" EntitySet="Members" />
+      <End Role="Inventory" EntitySet="Inventories" />
+    </AssociationSet>
+    <AssociationSet Name="CategoryItem" Association="Self.CategoryItem">
+      <End Role="Category" EntitySet="Categories" />
+      <End Role="Item" EntitySet="Items" />
+    </AssociationSet>
+    <AssociationSet Name="EventMember" Association="Self.EventMember">
+      <End Role="Event" EntitySet="Events" />
+      <End Role="Member" EntitySet="Members" />
+    </AssociationSet>
+    <AssociationSet Name="MemberPhone" Association="Self.MemberPhone">
+      <End Role="Member" EntitySet="Members" />
+      <End Role="Phone" EntitySet="Phones" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Inventory_Item" Association="InventoryDatabaseModel.FK_Inventory_Item">
+      <End Role="Item" EntitySet="Items" />
+      <End Role="Inventory" EntitySet="Inventories" />
+    </AssociationSet>
+  </EntityContainer>
+  <Association Name="FK_Inventory_Item">
+    <End Type="InventoryDatabaseModel.Item" Role="Item" Multiplicity="1" />
+    <End Type="InventoryDatabaseModel.Inventory" Role="Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Item">
+        <PropertyRef Name="item_id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="item_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
